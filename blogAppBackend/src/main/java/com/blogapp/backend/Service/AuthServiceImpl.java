@@ -11,6 +11,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.text.SimpleDateFormat;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
@@ -26,7 +27,9 @@ public class AuthServiceImpl implements AuthService{
         if(authenticate == null)
             throw new RuntimeException("Bad Credentials");
 
-        return JwtUtils.generateToken(((UserDetails)(authenticate.getPrincipal())).getUsername());
+        UserDetails user = (UserDetails) authenticate.getPrincipal();
+
+        return JwtUtils.generateToken(user.getUsername());
     }
 
     @Override

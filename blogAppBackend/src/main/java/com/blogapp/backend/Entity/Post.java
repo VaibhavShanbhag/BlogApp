@@ -9,16 +9,21 @@ import lombok.*;
 @NoArgsConstructor
 @ToString
 @AllArgsConstructor
-public class User{
+public class Post {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
-    private Long userid;
+    @GeneratedValue(strategy = GenerationType.UUID)
+    private String postid;
     @Column(nullable = false, unique = true)
-    private String username;
-    @Column(nullable = false, unique = true)
-    private String emailid;
+    private String title;
+    @Lob
+    @Column(nullable = false, columnDefinition = "TEXT")
+    private String des;
+    private String photo;
     @Column(nullable = false)
-    private String password;
+    private String username;
+    @Column(nullable = false)
+    private String userid;
+    private String[] categories;
     @Column(nullable = false)
     private String timestamp;
 }
