@@ -32,6 +32,8 @@ public class SecurityFilterChainConfig {
                 requestMatcher->requestMatcher.requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/posts/").permitAll()
+                        .requestMatchers("/api/posts/user/{id}").permitAll()
+                        .requestMatchers("/api/posts/{id}").permitAll()
                         .anyRequest().authenticated()
         );
 

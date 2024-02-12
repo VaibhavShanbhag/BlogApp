@@ -24,7 +24,7 @@ public class PostService {
     @Value("${gcs.bucket.name}")
     private String gcsBucketName;
 
-    public Post createPost(Post post){
+    public Post createPost(Post post) throws Exception{
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
         post.setTimestamp(timeStamp);
         return postRepository.save(post);
@@ -35,17 +35,16 @@ public class PostService {
             throw new IllegalArgumentException("Invalid image file");
         }
 
-        ClassPathResource resource = new ClassPathResource("crested-photon-411702-17b3f775755b.json");
+        ClassPathResource resource = new ClassPathResource("crested-photon-411702-64654c860336.json");
         GoogleCredentials credentials = GoogleCredentials.fromStream(resource.getInputStream());
+
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
         String gcsObjectName = "uploads/" + System.currentTimeMillis() + "_" + file.getOriginalFilename();
 
         BlobInfo blobInfo = BlobInfo.newBuilder(gcsBucketName, gcsObjectName).build();
 
         byte[] fileBytes = file.getBytes();
-        storage.writer(blobInfo).write(ByteBuffer.wrap(fileBytes));
-
-        storage.createAcl(blobInfo.getBlobId(), Acl.of(Acl.User.ofAllUsers(), Acl.Role.READER));
+        storage.create(blobInfo,fileBytes);
 
         return storage.get(gcsBucketName, gcsObjectName).getMediaLink();
     }

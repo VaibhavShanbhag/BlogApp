@@ -26,18 +26,20 @@ public class PostController {
         try {
             String fileUrlLink = postService.uploadFileToGCS(file);
             return ResponseEntity.status(HttpStatus.OK).body(Map.of("photo",fileUrlLink));
-        } catch (IOException e) {
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
         }
     }
 
     @PostMapping("/create")
     public ResponseEntity<String> createPost(@RequestBody Post post){
-        var posts = postService.createPost(post);
-        if(posts == null){
+        Post posts = null;
+        try {
+            posts = postService.createPost(post);
+            return new ResponseEntity(post,HttpStatus.OK);
+        } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in creating post");
         }
-        return new ResponseEntity(post,HttpStatus.OK);
     }
 
     @GetMapping("/")
