@@ -21,27 +21,6 @@ public class PostController {
     @Autowired
     private PostService postService;
 
-    @PostMapping("/upload")
-    public ResponseEntity<Object> uploadPhotoPost(@RequestPart("file") MultipartFile file){
-        try {
-            String fileUrlLink = postService.uploadFileToGCS(file);
-            return ResponseEntity.status(HttpStatus.OK).body(Map.of("photo",fileUrlLink));
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file");
-        }
-    }
-
-    @PostMapping("/create")
-    public ResponseEntity<String> createPost(@RequestBody Post post){
-        Post posts = null;
-        try {
-            posts = postService.createPost(post);
-            return new ResponseEntity(post,HttpStatus.OK);
-        } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in creating post");
-        }
-    }
-
     @GetMapping("/")
     public ResponseEntity<String> getAllPost(@RequestParam String search){
         try{
@@ -51,11 +30,9 @@ public class PostController {
         catch (Exception e){
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
         }
-
-
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/post/{id}")
     public ResponseEntity<String> getSinglePostDetailsById(@PathVariable String id){
         var post = postService.getSinglePostDetailsById(id);
         if(post == null){
@@ -66,13 +43,57 @@ public class PostController {
     }
 
     @GetMapping("/user/{id}")
-    public ResponseEntity<String> getPostBySpecificUserById(@PathVariable String userid){
+    public ResponseEntity<String> getPostBySpecificUserById(@PathVariable String id){
         try{
-            List<Post> results = postService.getPostBySpecificUserById(userid);
+            List<Post> results = postService.getPostBySpecificUserById(id);
             return new ResponseEntity(results,HttpStatus.OK);
         }
         catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("No Posts Found By User");
+        }
+    }
+
+    @PostMapping("/upload")
+    public ResponseEntity<Object> uploadPhotoPost(@RequestPart("file") MultipartFile file){
+        try {
+            String fileUrlLink = postService.uploadFileToGCS(file);
+            return ResponseEntity.status(HttpStatus.OK).body(Map.of("photo",fileUrlLink));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error uploading file" + e.getMessage());
+        }
+    }
+
+    @PostMapping("/create")
+    public ResponseEntity<String> createPost(@RequestBody Post post){
+        Post posts = null;
+        try {
+            posts = postService.createPost(post);
+            return new ResponseEntity(posts,HttpStatus.OK);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in creating post");
+        }
+    }
+
+    @PutMapping("/post/{id}")
+    public ResponseEntity<String> updatePost(@PathVariable String id, @RequestBody Post post){
+        Post posts = null;
+        try {
+            posts = postService.updatePost(id,post);
+            return new ResponseEntity(posts,HttpStatus.OK);
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Post not exist with post id");
+        }
+    }
+
+    @DeleteMapping("/post/{id}")
+    public ResponseEntity<String> deletePost(@PathVariable String id){
+        try{
+            postService.deletePost(id);
+            return ResponseEntity.ok("Deleted Post Successfully");
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in deleting post");
         }
     }
 }

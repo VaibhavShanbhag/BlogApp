@@ -33,7 +33,9 @@ public class SecurityFilterChainConfig {
                         .requestMatchers("/api/auth/register").permitAll()
                         .requestMatchers("/api/posts/").permitAll()
                         .requestMatchers("/api/posts/user/{id}").permitAll()
-                        .requestMatchers("/api/posts/{id}").permitAll()
+                        .requestMatchers("/api/posts/post/{id}").permitAll()
+                        .requestMatchers("/api/comments/post/{postid}").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/users/{username}").permitAll()
                         .anyRequest().authenticated()
         );
 

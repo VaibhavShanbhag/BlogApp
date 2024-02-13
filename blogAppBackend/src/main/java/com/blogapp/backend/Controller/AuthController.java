@@ -27,11 +27,12 @@ public class AuthController {
         try {
             var jwtToken = authService.login(authRequestDto.username(), authRequestDto.password());
             var user = userService.getUserByUsername(authRequestDto.username());
+            long cookieMaxAgeInSeconds = 1 * 60 * 60;
 
             ResponseCookie cookie = ResponseCookie.from("token", jwtToken)
                     .httpOnly(true)
                     .path("/")
-                    .maxAge(150)
+                    .maxAge((int) cookieMaxAgeInSeconds)
                     .build();
 
             response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());

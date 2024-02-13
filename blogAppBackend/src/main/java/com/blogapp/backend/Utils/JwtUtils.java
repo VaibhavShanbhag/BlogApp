@@ -43,7 +43,7 @@ public class JwtUtils {
 
     public static String generateToken(String username){
         Date now = new Date();
-        long cookieExpiry = 150;
+        long cookieExpiry = 1 * 60 * 60;
         Date expiryDate = new Date(now.getTime() + cookieExpiry*1000L);
         return Jwts.builder()
                 .setSubject(username)
