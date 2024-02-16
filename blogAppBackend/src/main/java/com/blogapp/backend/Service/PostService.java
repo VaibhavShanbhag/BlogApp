@@ -38,7 +38,7 @@ public class PostService {
             throw new IllegalArgumentException("Invalid image file");
         }
 
-        ClassPathResource resource = new ClassPathResource("crested-photon-411702-64654c860336.json");
+        ClassPathResource resource = new ClassPathResource("src/main/resources/crested-photon-411702-64654c860336.json");
         GoogleCredentials credentials = GoogleCredentials.fromStream(resource.getInputStream());
 
         Storage storage = StorageOptions.newBuilder().setCredentials(credentials).build().getService();
