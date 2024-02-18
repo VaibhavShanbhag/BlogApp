@@ -3,7 +3,9 @@ package com.blogapp.backend.Controller;
 import com.blogapp.backend.Entity.Post;
 import com.blogapp.backend.Entity.User;
 import com.blogapp.backend.Service.UserService;
+import jakarta.servlet.http.HttpServletResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -33,7 +35,7 @@ public class UserController {
             userService.deleteUser(username);
             return ResponseEntity.ok("User Deleted Successfully");
         } catch (Exception e) {
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in deleting user");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("Error in deleting user" + e.getMessage());
         }
     }
 
@@ -45,7 +47,7 @@ public class UserController {
             return new ResponseEntity(users,HttpStatus.OK);
         }
         catch (Exception e){
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User not exist with post id");
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body("User not exist with post id"+e.getMessage());
         }
     }
 

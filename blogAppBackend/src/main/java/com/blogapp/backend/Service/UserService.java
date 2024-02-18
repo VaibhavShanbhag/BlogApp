@@ -6,6 +6,7 @@ import com.blogapp.backend.Entity.User;
 import com.blogapp.backend.Repository.CommentRespository;
 import com.blogapp.backend.Repository.PostRepository;
 import com.blogapp.backend.Repository.UserRepository;
+import com.blogapp.backend.Utils.JwtUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
@@ -18,6 +19,8 @@ import java.util.List;
 
 @Service
 public class UserService implements UserDetailsService {
+    private final UserDetailsService userDetailsService = null;
+
     @Autowired
     private UserRepository userRepository;
     @Autowired
@@ -51,7 +54,8 @@ public class UserService implements UserDetailsService {
     }
 
     public boolean deleteUser(String username) throws Exception {
-        User user = userRepository.findById(username).orElseThrow(()-> new Exception("No Comment Found"));
+        User user = userRepository.findByUsername(username);
+        if (user == null) throw new Exception("No User Found");
         userRepository.delete(user);
 
         List<Post> posts = postRepository.findPostByUserid(String.valueOf(user.getUserid()));
@@ -76,8 +80,6 @@ public class UserService implements UserDetailsService {
 
         if(updateUser == null)
             throw new Exception("No user Found");
-
-        updateUser.setUsername(user.getUsername());
         updateUser.setEmailid(user.getEmailid());
         String timeStamp = new SimpleDateFormat("yyyy.MM.dd.HH.mm.ss").format(new java.util.Date());
         updateUser.setTimestamp(timeStamp);
