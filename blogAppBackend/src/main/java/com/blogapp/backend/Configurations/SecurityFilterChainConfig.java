@@ -32,7 +32,7 @@ public class SecurityFilterChainConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.cors(corsConifg -> corsConifg.disable());
+        httpSecurity.cors(corsConifg -> corsConifg.configurationSource(corsConfigurationSource()));
         httpSecurity.csrf(csrfConfig -> csrfConfig.disable());
         httpSecurity.authorizeHttpRequests(
                 requestMatcher->requestMatcher.requestMatchers("/api/auth/login").permitAll()
