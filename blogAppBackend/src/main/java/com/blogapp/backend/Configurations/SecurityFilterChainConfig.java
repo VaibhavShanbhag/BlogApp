@@ -11,6 +11,12 @@ import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.AuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.web.filter.CorsFilter;
+
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -26,11 +32,12 @@ public class SecurityFilterChainConfig {
 
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity httpSecurity) throws Exception {
-        httpSecurity.cors(corsConfig->corsConfig.disable());
-        httpSecurity.csrf(csrfConfig->csrfConfig.disable());
+        httpSecurity.cors(corsConifg -> corsConifg.disable());
+        httpSecurity.csrf(csrfConfig -> csrfConfig.disable());
         httpSecurity.authorizeHttpRequests(
                 requestMatcher->requestMatcher.requestMatchers("/api/auth/login").permitAll()
                         .requestMatchers("/api/auth/register").permitAll()
+                        .requestMatchers("/api/auth/refetch").permitAll()
                         .requestMatchers("/api/posts/").permitAll()
                         .requestMatchers("/api/posts/user/{id}").permitAll()
                         .requestMatchers("/api/posts/post/{id}").permitAll()
@@ -50,5 +57,19 @@ public class SecurityFilterChainConfig {
         httpSecurity.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class);
 
         return httpSecurity.build();
+    }
+
+    @Bean
+    public CorsConfigurationSource corsConfigurationSource() {
+        CorsConfiguration configuration = new CorsConfiguration();
+        configuration.setAllowedOriginPatterns(List.of("http://127.0.0.1:5173")); // Use allowedOriginPatterns with specific origins
+        configuration.addAllowedMethod("*");
+        configuration.addAllowedHeader("*");
+        configuration.setAllowCredentials(true);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/api/**", configuration);
+
+        return source;
     }
 }

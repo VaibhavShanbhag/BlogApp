@@ -2,18 +2,22 @@ package com.blogapp.backend.Controller;
 
 import com.blogapp.backend.DTO.AuthRequestDto;
 import com.blogapp.backend.DTO.RegisterAuthResponseDto;
+import com.blogapp.backend.Entity.User;
 import com.blogapp.backend.Service.AuthService;
 import com.blogapp.backend.Service.UserService;
+import com.blogapp.backend.Utils.JwtUtils;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.Jwts;
+import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.RequiredArgsConstructor;
-import org.springframework.http.HttpHeaders;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseCookie;
-import org.springframework.http.ResponseEntity;
+import org.springframework.http.*;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 import java.util.Map;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/api/auth")
@@ -77,5 +81,24 @@ public class AuthController {
         response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
         return ResponseEntity.ok("Logout successful");
+    }
+
+    @GetMapping("/refetch")
+    public ResponseEntity<String> refetch(@CookieValue(name = "token") String token){
+        try{
+            Claims claims = Jwts.parser()
+                    .setSigningKey(JwtUtils.getSignKey())
+                    .parseClaimsJws(token)
+                    .getBody();
+
+            String username = claims.getSubject();
+            var user = userService.getUserByUsername(username);
+            ObjectMapper objectMapper = new ObjectMapper();
+
+            return ResponseEntity.ok().contentType(MediaType.APPLICATION_JSON).body(objectMapper.writeValueAsString(user));
+        }
+        catch (Exception e){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token verification failed: " + e.getMessage());
+        }
     }
 }

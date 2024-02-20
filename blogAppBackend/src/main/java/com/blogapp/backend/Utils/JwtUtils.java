@@ -20,7 +20,7 @@ public class JwtUtils {
         return parseToken(jwtToken).isPresent();
     }
 
-    private static Key getSignKey() {
+    public static Key getSignKey() {
         byte[] keyBytes= Decoders.BASE64.decode(SECRET);
         return Keys.hmacShaKeyFor(keyBytes);
     }
