@@ -86,7 +86,7 @@ public class AuthController {
     @GetMapping("/refetch")
     public ResponseEntity<String> refetch(@CookieValue(name = "token", required=false) String token){
         if(token == null || token.isEmpty()){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token verification failed: " + e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token verification failed");
         }
         try{
             Claims claims = Jwts.parser()
