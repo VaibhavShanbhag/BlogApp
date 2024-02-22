@@ -84,7 +84,10 @@ public class AuthController {
     }
 
     @GetMapping("/refetch")
-    public ResponseEntity<String> refetch(@CookieValue(name = "token") String token){
+    public ResponseEntity<String> refetch(@CookieValue(name = "token", required=false) String token){
+        if(token == null || token.isEmpty()){
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Token verification failed: " + e.getMessage());
+        }
         try{
             Claims claims = Jwts.parser()
                     .setSigningKey(JwtUtils.getSignKey())
