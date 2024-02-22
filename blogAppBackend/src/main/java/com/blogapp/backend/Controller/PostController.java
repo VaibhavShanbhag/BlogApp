@@ -22,7 +22,7 @@ public class PostController {
     private PostService postService;
 
     @GetMapping("/")
-    public ResponseEntity<String> getAllPost(@RequestParam String search){
+    public ResponseEntity<String> getAllPost(@RequestParam("search") String search){
         try{
             List<Post> results = postService.getAllPostSearch(search);
             return new ResponseEntity(results,HttpStatus.OK);
