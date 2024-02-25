@@ -40,7 +40,7 @@ public class UserController {
     }
 
     @PutMapping("/{userid}")
-    public ResponseEntity<String> updatePost(@PathVariable Long userid, @RequestBody User user){
+    public ResponseEntity<String> updateUser(@PathVariable Long userid, @RequestBody User user){
         User users = null;
         try {
             users = userService.updateUser(userid,user);
