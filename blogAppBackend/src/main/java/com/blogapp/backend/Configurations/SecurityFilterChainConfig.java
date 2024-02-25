@@ -62,7 +62,7 @@ public class SecurityFilterChainConfig {
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         CorsConfiguration configuration = new CorsConfiguration();
-        configuration.setAllowedOriginPatterns(List.of("http://localhost:5173")); // Use allowedOriginPatterns with specific origins
+        configuration.addAllowedOriginPattern("*"); // Use allowedOriginPatterns with specific origins
         configuration.addAllowedMethod("*");
         configuration.addAllowedHeader("*");
         configuration.setAllowCredentials(true);

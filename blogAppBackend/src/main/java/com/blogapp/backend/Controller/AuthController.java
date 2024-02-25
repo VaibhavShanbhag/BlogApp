@@ -35,7 +35,7 @@ public class AuthController {
 
             ResponseCookie cookie = ResponseCookie.from("token", jwtToken)
                     .httpOnly(true)
-                    .secure(false)
+                    .secure(true)
                     .sameSite("None")
                     .path("/")
                     .maxAge((int) cookieMaxAgeInSeconds)
@@ -75,7 +75,7 @@ public class AuthController {
         // Expire or delete the authentication token cookie on the client side
         ResponseCookie cookie = ResponseCookie.from("token", "")
                 .httpOnly(true)
-                .secure(false)
+                .secure(true)
                 .sameSite("None")
                 .path("/")
                 .maxAge(0)
