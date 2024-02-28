@@ -35,7 +35,6 @@ public class AuthController {
 
             ResponseCookie cookie = ResponseCookie.from("token", jwtToken)
                     .httpOnly(true)
-                    .secure(true)
                     .sameSite("None")
                     .path("/")
                     .maxAge((int) cookieMaxAgeInSeconds)
@@ -76,7 +75,6 @@ public class AuthController {
         ResponseCookie cookie = ResponseCookie.from("token", "")
                 .httpOnly(true)
                 .sameSite("None")
-                .secure(true)
                 .path("/")
                 .maxAge(0)
                 .build();
