@@ -36,11 +36,11 @@ public class SecurityFilterChainConfig {
         httpSecurity.csrf(csrfConfig -> csrfConfig.disable());
         httpSecurity.authorizeHttpRequests(
                 requestMatcher->requestMatcher.requestMatchers("/api/auth/login").permitAll()
-                        .requestMatchers("/api/auth/register").permitAll()
-                        .requestMatchers("/api/auth/refetch").permitAll()
-                        .requestMatchers("/api/posts/").permitAll()
-                        .requestMatchers("/api/posts/user/{id}").permitAll()
-                        .requestMatchers("/api/posts/post/{id}").permitAll()
+                        .requestMatchers(HttpMethod.POST,"/api/auth/register").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/auth/refetch").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/posts/").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/posts/user/{id}").permitAll()
+                        .requestMatchers(HttpMethod.GET,"/api/posts/post/{id}").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/comments/post/{postid}").permitAll()
                         .requestMatchers(HttpMethod.GET,"/api/users/{username}").permitAll()
                         .anyRequest().authenticated()
